@@ -15,7 +15,7 @@ const CreatePostWizard = () => {
     <div className="flex w-full gap-3">
       <img
         src={user.profileImageUrl}
-        alt={user.fullName}
+        alt={"Profile Picture"}
         className="h-14 w-14 rounded-full"
       />
       <input
@@ -38,7 +38,7 @@ const PostView = (props: PostWithUser) => {
     >
       <img
         src={author.profileImageUrl}
-        alt={author.fullName}
+        alt={"Profile Picture"}
         className="h-14 w-14 rounded-full"
       />
       <div className="flex flex-col">
