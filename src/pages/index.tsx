@@ -1,22 +1,31 @@
-import { useUser, SignInButton, SignOutButton } from "@clerk/nextjs";
-import { Sign } from "crypto";
+import { useUser, SignInButton } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-import { postsRouter } from "~/server/api/routers/posts";
-import { RouterOutputs, api } from "~/utils/api";
-
+import { api } from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
-import { LoadingSpinner, LoadingPage } from "~/components/LoadingSpinner";
+import { LoadingPage } from "~/components/LoadingSpinner";
+import { useState } from "react";
 
 dayjs.extend(relativeTime);
 
 const CreatePostWizard = () => {
   const { user } = useUser();
 
+  const [input, setInput] = useState("");
+
+  const ctx = api.useContext();
+
   if (!user) return null;
+
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: () => {
+      setInput("");
+      void ctx.posts.getAll.invalidate();
+    },
+  });
 
   return (
     <div className="flex w-full gap-3">
@@ -31,7 +40,15 @@ const CreatePostWizard = () => {
       <input
         placeholder="Type some emojis..."
         className="px- grow bg-transparent outline-none"
+        type="text"
+        value={input}
+        onChange={(input) => {
+          setInput(input.target.value);
+        }}
       />
+      <button onClick={() => mutate({ content: input })} disabled={isPosting}>
+        Post
+      </button>
     </div>
   );
 };
