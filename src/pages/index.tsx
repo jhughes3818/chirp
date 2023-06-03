@@ -6,6 +6,12 @@ import Link from "next/link";
 import { postsRouter } from "~/server/api/routers/posts";
 import { RouterOutputs, api } from "~/utils/api";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Image from "next/image";
+
+dayjs.extend(relativeTime);
+
 const CreatePostWizard = () => {
   const { user } = useUser();
 
@@ -13,10 +19,13 @@ const CreatePostWizard = () => {
 
   return (
     <div className="flex w-full gap-3">
-      <img
+      <Image
+        width={56}
+        height={56}
         src={user.profileImageUrl}
         alt={"Profile Picture"}
         className="h-14 w-14 rounded-full"
+        priority={true}
       />
       <input
         placeholder="Type some emojis..."
@@ -36,14 +45,18 @@ const PostView = (props: PostWithUser) => {
       key={post.id}
       className="flex items-center gap-3 border-b border-slate-400 p-4"
     >
-      <img
+      <Image
+        width={56}
+        height={56}
         src={author.profileImageUrl}
         alt={"Profile Picture"}
         className="h-14 w-14 rounded-full"
+        priority={true}
       />
       <div className="flex flex-col">
-        <div className="flex">
+        <div className="flex gap-2">
           <span>{`@${author.username}`}</span>
+          <span>{dayjs(post.createdAt).fromNow()}</span>
         </div>
 
         <span>{post.content}</span>

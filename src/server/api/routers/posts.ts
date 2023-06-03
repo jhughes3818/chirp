@@ -3,6 +3,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
+
+
   const filterUserForClient = (user: User) => {
     return {id: user.id, username: user.username!, profileImageUrl: user.profileImageUrl}
   }
